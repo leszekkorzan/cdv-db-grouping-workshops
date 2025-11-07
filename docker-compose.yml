@@ -1,0 +1,51 @@
+version: "3.9"
+name: "pg-grouping-workshop"
+
+services:
+  db:
+    image: "postgres:18-alpine"
+    volumes:
+      - postgres:/var/lib/postgresql
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: workshop
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - default
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=demo@demo.com
+      - PGADMIN_DEFAULT_PASSWORD=demo
+      - PGADMIN_CONFIG_SERVER_MODE=False  
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    ports:
+      - 5050:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./servers.json:/pgadmin4/servers.json:ro
+    networks:
+      - default
+
+volumes:
+  postgres:
+    driver: local
+  pgadmin-data:
+    driver: local
+
+networks:
+  default:
+    name: pg-grouping-workshop-network
