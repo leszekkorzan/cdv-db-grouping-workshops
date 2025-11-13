@@ -9,7 +9,7 @@ services:
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
     environment:
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: workshop
     healthcheck:
       test:
@@ -29,8 +29,8 @@ services:
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=demo@demo.com
-      - PGADMIN_DEFAULT_PASSWORD=demo
-      - PGADMIN_CONFIG_SERVER_MODE=False  
+      - PGADMIN_DEFAULT_PASSWORD=password
+      - PGADMIN_CONFIG_SERVER_MODE=False
       - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
     ports:
       - 5050:80
